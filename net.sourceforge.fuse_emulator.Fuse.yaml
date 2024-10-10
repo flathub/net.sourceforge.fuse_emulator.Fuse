@@ -77,11 +77,13 @@ modules:
         paths:
           - fuse-config-dir.patch
           - set-generic-icon.patch
+          - convert-xpm-to-pixbuf.patch
       - type: file
         path: net.sourceforge.fuse_emulator.Fuse.appdata.xml
       - type: script
         dest-filename: autogen.sh
         commands:
+          - ./convert-xpm.sh
           - autoreconf -f -i -I m4
     post-install:
       - install -m644 -D net.sourceforge.fuse_emulator.Fuse.appdata.xml /app/share/appdata/net.sourceforge.fuse_emulator.Fuse.appdata.xml
