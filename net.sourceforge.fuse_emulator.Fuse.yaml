@@ -54,14 +54,14 @@ modules:
   - name: libspectrum
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.5.0/libspectrum-1.5.0.tar.gz
-        sha256: a353cb46e9b1a281061d816353ea010d0a6fe78e6a17aa0b7b74271ca5e4acfc
+        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.6.0/libspectrum-1.6.0.tar.gz
+        sha256: ac7ee3a981108e4f398629137b809de8be30e6a6e094536bc8d2e14313ccc0aa
   # Misc utilities (not needed if you simply want to run Fuse)
   - name: fuse-utils
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse-utils/1.4.3/fuse-utils-1.4.3.tar.gz
-        sha256: 0d2588bc37fcc6b039010c9ed68aa1e0bf513a80978737b5545f1d4f1684c325
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse-utils/1.4.4/fuse-utils-1.4.4.tar.gz
+        sha256: 71cee384c2a91d173b2f767a086c0d83979ecc2619e345b6afc2dd42f4551d94
   # The emulator itself
   - name: fuse
     config-opts:
@@ -71,19 +71,16 @@ modules:
     rm-configure: true
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.6.0/fuse-1.6.0.tar.gz
-        sha256: 3a8fedf2ffe947c571561bac55a59adad4c59338f74e449b7e7a67d9ca047096
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.7.0/fuse-1.7.0.tar.gz
+        sha256: a3ff33430898a0f1927f2753a999a5bc99336702c04b8672220dee01d57d85d1
       - type: patch
         paths:
           - fuse-config-dir.patch
-          - set-generic-icon.patch
-          - convert-xpm-to-pixbuf.patch
       - type: file
         path: net.sourceforge.fuse_emulator.Fuse.appdata.xml
       - type: script
         dest-filename: autogen.sh
         commands:
-          - ./convert-xpm.sh
           - autoreconf -f -i -I m4
     post-install:
       - install -m644 -D net.sourceforge.fuse_emulator.Fuse.appdata.xml /app/share/appdata/net.sourceforge.fuse_emulator.Fuse.appdata.xml
@@ -100,12 +97,11 @@ modules:
     rm-configure: true
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.6.0/fuse-1.6.0.tar.gz
-        sha256: 3a8fedf2ffe947c571561bac55a59adad4c59338f74e449b7e7a67d9ca047096
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.7.0/fuse-1.7.0.tar.gz
+        sha256: a3ff33430898a0f1927f2753a999a5bc99336702c04b8672220dee01d57d85d1
       - type: patch
         paths:
           - fuse-config-dir.patch
-          - set-generic-icon.patch
       - type: script
         dest-filename: autogen.sh
         commands:

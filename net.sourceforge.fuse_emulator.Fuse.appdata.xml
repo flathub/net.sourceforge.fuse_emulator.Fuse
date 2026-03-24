@@ -17,6 +17,21 @@
     <category>Emulator</category>
   </categories>
   <releases>
+    <release date="2026-03-24" version="1.7.0">
+      <description>
+        <ul>
+          <li>Added Currah μSpeech emulation</li>
+          <li>More accurate AM29F010B flash ROM handling</li>
+          <li>Improved EDSK disk image handling</li>
+          <li>Fixed the uPD765 FDC SCAN bug, allowing formatting on CP/M Plus and Fuzix</li>
+          <li>Improved TTX2000S teletext handling</li>
+          <li>Improved Spectranet socket interrupt behaviour</li>
+          <li>Added support for loading .S snapshot files</li>
+          <li>Better emulation accuracy and performance</li>
+          <li>Several UI fixes and improvements</li>
+        </ul>
+      </description>
+    </release>
     <release date="2021-03-01" version="1.6.0">
       <description>
         <ul>
