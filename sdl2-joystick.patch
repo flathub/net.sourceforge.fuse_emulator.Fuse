@@ -1,0 +1,19 @@
+From: Alberto Garcia <berto@igalia.com>
+Subject: Use SDL2 for joystick support
+diff --git a/configure.ac b/configure.ac
+index 9c0d6b6e..33652873 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -774,10 +774,10 @@ if test "$stick" = yes; then
+       if test "$libjsw" = yes; then
+         AC_MSG_RESULT([no, use libjsw])
+       else
+-        if test "$sdl1_available" = yes; then
++        if test "$sdl2_available" = yes; then
+           AC_MSG_RESULT(yes)
+           AC_DEFINE([USE_JOYSTICK], 1, [Defined if we're using hardware joysticks])
+-          use_sdl1=yes
++          use_sdl2=yes
+         else
+           AC_MSG_WARN([SDL version $SDL1_VERSION not found - joystick support disabled])
+           stick=no

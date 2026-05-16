@@ -3,9 +3,6 @@ runtime: org.freedesktop.Platform
 runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 command: fuse
-rename-desktop-file: fuse.desktop
-rename-icon: fuse
-copy-icon: true
 finish-args:
   # X11 + XShm access
   - --share=ipc
@@ -18,23 +15,19 @@ finish-args:
   # Home directory (for loading and saving Spectrum software)
   - --filesystem=home
 build-options:
-  cppflags: -DG_DISABLE_CAST_CHECKS -DGLIB_DISABLE_DEPRECATION_WARNINGS -DGDK_DISABLE_DEPRECATION_WARNINGS
+  cppflags: -DG_DISABLE_CAST_CHECKS
   env:
     V: '1'
 cleanup:
-  - /bin/sdl-config
   - /include
   - /lib/*.a
   - /lib/*.la
   - /lib/*.so
   - /lib/pkgconfig
-  - /share/aclocal
   - /share/applications/mimeinfo.cache
   - /share/icons/hicolor/icon-theme.cache
   - /share/man
 modules:
-  # SDL 1.2 compatibility layer for SDL 2
-  - shared-modules/SDL/sdl12-compat.json
   # Audiofile is used for loading Spectrum data from WAV files
   - name: libaudiofile
     config-opts:
@@ -54,41 +47,54 @@ modules:
   - name: libspectrum
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.6.0/libspectrum-1.6.0.tar.gz
-        sha256: ac7ee3a981108e4f398629137b809de8be30e6a6e094536bc8d2e14313ccc0aa
+        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.6.1/libspectrum-1.6.1.tar.gz
+        sha256: 8c44080b012c9fcf79ba481c0134e200c9444717ef0e2e41edcf9df559c70153
   # Misc utilities (not needed if you simply want to run Fuse)
   - name: fuse-utils
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse-utils/1.4.4/fuse-utils-1.4.4.tar.gz
-        sha256: 71cee384c2a91d173b2f767a086c0d83979ecc2619e345b6afc2dd42f4551d94
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse-utils/1.4.5/fuse-utils-1.4.5.tar.gz
+        sha256: 5f55af3fc692261e7e817a7fd276e1655c838303e24038f22fe9e422d61437ab
   # The emulator itself
   - name: fuse
     config-opts:
+      - --bindir=/app/libexec
       - --with-x
-      - --with-audio-driver=sdl
+      - --with-audio-driver=sdl2
       - --enable-desktop-integration
     rm-configure: true
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.7.0/fuse-1.7.0.tar.gz
-        sha256: a3ff33430898a0f1927f2753a999a5bc99336702c04b8672220dee01d57d85d1
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.8.0/fuse-1.8.0.tar.gz
+        sha256: 710656da455bf5fe9843ca80474dd6adc916fc9408476aebf878771801107374
       - type: patch
-        paths:
-          - fuse-config-dir.patch
-      - type: file
-        path: net.sourceforge.fuse_emulator.Fuse.appdata.xml
+        path: sdl2-joystick.patch
       - type: script
         dest-filename: autogen.sh
         commands:
           - autoreconf -f -i -I m4
-    post-install:
-      - install -m644 -D net.sourceforge.fuse_emulator.Fuse.appdata.xml /app/share/appdata/net.sourceforge.fuse_emulator.Fuse.appdata.xml
+      # Move config file to the new location.
+      # This wrapper will disappear in the next release.
+      - type: script
+        dest-filename: fuse
+        commands:
+          - |-
+            binary="$(basename "$0")"
+            old_cfg="$XDG_CONFIG_HOME/fuserc"
+            new_cfg="$XDG_CONFIG_HOME/fuse-emulator/fuserc"
+            if [ ! -f "$new_cfg" ] && [ -f "$old_cfg" ]; then
+               install -m644 -D "$old_cfg" "$new_cfg"
+               rm -f "$old_cfg"
+            fi
+            exec "/app/libexec/$binary" "$@"
+      - type: shell
+        commands:
+          - install -m755 -D fuse /app/bin/fuse
   # The SDL version of the emulator
   - name: fuse-sdl
     config-opts:
-      - --with-sdl
-      - --with-audio-driver=sdl
+      - --bindir=/app/libexec
+      - --with-sdl2
       - --disable-desktop-integration
     make-args:
       - EXEEXT=-sdl
@@ -97,18 +103,18 @@ modules:
     rm-configure: true
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.7.0/fuse-1.7.0.tar.gz
-        sha256: a3ff33430898a0f1927f2753a999a5bc99336702c04b8672220dee01d57d85d1
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.8.0/fuse-1.8.0.tar.gz
+        sha256: 710656da455bf5fe9843ca80474dd6adc916fc9408476aebf878771801107374
       - type: patch
-        paths:
-          - fuse-config-dir.patch
+        path: sdl2-joystick.patch
       - type: script
         dest-filename: autogen.sh
         commands:
           - autoreconf -f -i -I m4
       - type: shell
         commands:
-          - cp /app/share/applications/fuse.desktop /app/share/applications/net.sourceforge.fuse_emulator.Fuse.SDL.desktop
+          - ln -s fuse /app/bin/fuse-sdl
+          - cp /app/share/applications/net.sourceforge.fuse_emulator.Fuse.desktop /app/share/applications/net.sourceforge.fuse_emulator.Fuse.SDL.desktop
           - >-
              desktop-file-edit --set-key=Name --set-value='SDL Fuse'
              --set-key=Exec --set-value='fuse-sdl %f'
