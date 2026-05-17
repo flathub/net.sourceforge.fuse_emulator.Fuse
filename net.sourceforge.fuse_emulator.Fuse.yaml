@@ -106,7 +106,9 @@ modules:
         url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.8.0/fuse-1.8.0.tar.gz
         sha256: 710656da455bf5fe9843ca80474dd6adc916fc9408476aebf878771801107374
       - type: patch
-        path: sdl2-joystick.patch
+        paths:
+          - sdl2-joystick.patch
+          - sdl2-full-screen.patch
       - type: script
         dest-filename: autogen.sh
         commands:

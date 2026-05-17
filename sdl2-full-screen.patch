@@ -1,0 +1,21 @@
+commit 48d1d2305b0cf67936c0e2c4ea09fb5c87b0aae5
+Author: Fredrick Meunier <fredm@spamcop.net>
+Date:   Sun May 17 19:53:05 2026 +1000
+
+    Correct Options level full screen toggle for SDL 2 (thanks, Blerkotron)
+
+diff --git a/menu_data.dat b/menu_data.dat
+index 9f899ce8..eac0162c 100644
+--- a/menu_data.dat
++++ b/menu_data.dat
+@@ -131,7 +131,9 @@ Options/Select ROMs/Peripheral ROMs/uS_peech..., Item,, menu_options_selectroms_
+ 
+ Options/_Filter..., Item,,, menu_filter_detail
+ 
+-#if defined UI_SDL || defined UI_SDL2
++#ifdef UI_SDL
++Options/F_ull screen, Item, F11
++#elif defined UI_SDL2
+ Options/F_ull screen, Item, F11
+ #endif
+ 
