@@ -109,6 +109,7 @@ modules:
         paths:
           - sdl2-joystick.patch
           - sdl2-full-screen.patch
+          - sdl2-timex-tape-icon.patch
       - type: script
         dest-filename: autogen.sh
         commands:

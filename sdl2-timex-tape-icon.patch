@@ -1,0 +1,22 @@
+commit e6990dea40df51e13439c0733b7a40a942a16507
+Author: Fredrick Meunier <fredm@spamcop.net>
+Date:   Sun May 17 20:29:22 2026 +1000
+
+    Fix SDL2 Timex tape icon placement
+
+diff --git a/ui/sdl2/sdl2_display.c b/ui/sdl2/sdl2_display.c
+index 65410f94..c304a8a5 100644
+--- a/ui/sdl2/sdl2_display.c
++++ b/ui/sdl2/sdl2_display.c
+@@ -293,6 +293,11 @@ sdl2display_status_icon( SDL_Surface **icon, int x, int y )
+ 
+   if( !surface ) return;
+ 
++  if( machine_current->timex ) {
++    x <<= 1;
++    y <<= 1;
++  }
++
+   sdl2display_icon_rect( x, y, surface->w, surface->h,
+                          sdl2display_current_size,
+                          fullscreen_x_off, fullscreen_y_off, &rect );
