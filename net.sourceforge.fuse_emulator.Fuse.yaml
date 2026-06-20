@@ -4,9 +4,10 @@ runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 command: fuse
 finish-args:
-  # X11 + XShm access
+  # Wayland and X11 access
   - --share=ipc
-  - --socket=x11
+  - --socket=wayland
+  - --socket=fallback-x11
   # Sound
   - --socket=pulseaudio
   - --device=all
@@ -47,28 +48,51 @@ modules:
   - name: libspectrum
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.6.1/libspectrum-1.6.1.tar.gz
-        sha256: 8c44080b012c9fcf79ba481c0134e200c9444717ef0e2e41edcf9df559c70153
+        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.6.2/libspectrum-1.6.2.tar.gz
+        sha256: 74bb2bb0e78779a09808aa7636fe7fa6c815002e8344b46d914bfb7a864c88e0
   # Misc utilities (not needed if you simply want to run Fuse)
   - name: fuse-utils
     sources:
       - type: archive
         url: https://download.sourceforge.net/project/fuse-emulator/fuse-utils/1.4.5/fuse-utils-1.4.5.tar.gz
         sha256: 5f55af3fc692261e7e817a7fd276e1655c838303e24038f22fe9e422d61437ab
-  # The emulator itself
+  # The SDL version of the emulator
+  - name: fuse-sdl
+    config-opts:
+      - --bindir=/app/libexec
+      - --with-sdl
+      - --enable-desktop-integration
+    make-args:
+      - EXEEXT=-sdl
+    make-install-args:
+      - EXEEXT=-sdl
+    rm-configure: true
+    post-install:
+      - ln -s fuse /app/bin/fuse-sdl
+      - mv /app/share/applications/net.sourceforge.fuse_emulator.Fuse.desktop /app/share/applications/net.sourceforge.fuse_emulator.Fuse.SDL.desktop
+      - >-
+         desktop-file-edit --set-key=Name --set-value='SDL Fuse'
+         /app/share/applications/net.sourceforge.fuse_emulator.Fuse.SDL.desktop
+    sources:
+      - type: archive
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.0/fuse-1.9.0.tar.gz
+        sha256: 34618c419e215e16ae4584f227e899e4e55be1ddb90fb03380c910ac16cab38a
+      - type: script
+        dest-filename: autogen.sh
+        commands:
+          - autoreconf -f -i -I m4
+  # The GTK version of the emulator
   - name: fuse
     config-opts:
       - --bindir=/app/libexec
       - --with-x
-      - --with-audio-driver=sdl2
+      - --with-audio-driver=sdl
       - --enable-desktop-integration
     rm-configure: true
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.8.0/fuse-1.8.0.tar.gz
-        sha256: 710656da455bf5fe9843ca80474dd6adc916fc9408476aebf878771801107374
-      - type: patch
-        path: sdl2-joystick.patch
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.0/fuse-1.9.0.tar.gz
+        sha256: 34618c419e215e16ae4584f227e899e4e55be1ddb90fb03380c910ac16cab38a
       - type: script
         dest-filename: autogen.sh
         commands:
@@ -90,37 +114,3 @@ modules:
       - type: shell
         commands:
           - install -m755 -D fuse /app/bin/fuse
-  # The SDL version of the emulator
-  - name: fuse-sdl
-    config-opts:
-      - --bindir=/app/libexec
-      - --with-sdl2
-      - --disable-desktop-integration
-    make-args:
-      - EXEEXT=-sdl
-    make-install-args:
-      - EXEEXT=-sdl
-    rm-configure: true
-    sources:
-      - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.8.0/fuse-1.8.0.tar.gz
-        sha256: 710656da455bf5fe9843ca80474dd6adc916fc9408476aebf878771801107374
-      - type: patch
-        paths:
-          - sdl2-joystick.patch
-          - sdl2-full-screen.patch
-          - sdl2-timex-tape-icon.patch
-      - type: script
-        dest-filename: autogen.sh
-        commands:
-          - autoreconf -f -i -I m4
-      - type: shell
-        commands:
-          - ln -s fuse /app/bin/fuse-sdl
-          - cp /app/share/applications/net.sourceforge.fuse_emulator.Fuse.desktop /app/share/applications/net.sourceforge.fuse_emulator.Fuse.SDL.desktop
-          - >-
-             desktop-file-edit --set-key=Name --set-value='SDL Fuse'
-             --set-key=Exec --set-value='fuse-sdl %f'
-             --set-icon=$FLATPAK_ID
-             --remove-category=GTK
-             /app/share/applications/net.sourceforge.fuse_emulator.Fuse.SDL.desktop
