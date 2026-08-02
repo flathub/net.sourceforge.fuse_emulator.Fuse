@@ -48,18 +48,17 @@ modules:
   - name: libspectrum
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.6.2/libspectrum-1.6.2.tar.gz
-        sha256: 74bb2bb0e78779a09808aa7636fe7fa6c815002e8344b46d914bfb7a864c88e0
+        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.6.3/libspectrum-1.6.3.tar.gz
+        sha256: fa4a5e68c1ab5860dcdf99f5486ee6313995dbe30e84160e9f699d0f8db77d76
   # Misc utilities (not needed if you simply want to run Fuse)
   - name: fuse-utils
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse-utils/1.4.5/fuse-utils-1.4.5.tar.gz
-        sha256: 5f55af3fc692261e7e817a7fd276e1655c838303e24038f22fe9e422d61437ab
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse-utils/1.4.6/fuse-utils-1.4.6.tar.gz
+        sha256: 11612ac34b7e8aca6bdde43dd4d56737a178e2f4e171ec30144ca2f0976d937c
   # The SDL version of the emulator
   - name: fuse-sdl
     config-opts:
-      - --bindir=/app/libexec
       - --with-sdl
       - --enable-desktop-integration
     make-args:
@@ -68,15 +67,14 @@ modules:
       - EXEEXT=-sdl
     rm-configure: true
     post-install:
-      - ln -s fuse /app/bin/fuse-sdl
       - mv /app/share/applications/net.sourceforge.fuse_emulator.Fuse.desktop /app/share/applications/net.sourceforge.fuse_emulator.Fuse.SDL.desktop
       - >-
          desktop-file-edit --set-key=Name --set-value='SDL Fuse'
          /app/share/applications/net.sourceforge.fuse_emulator.Fuse.SDL.desktop
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.0/fuse-1.9.0.tar.gz
-        sha256: 34618c419e215e16ae4584f227e899e4e55be1ddb90fb03380c910ac16cab38a
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.1/fuse-1.9.1.tar.gz
+        sha256: 5815b42256d4dd28581d59f3ceec33fcd736b7a68afe032b1e65ba714fb55642
       - type: script
         dest-filename: autogen.sh
         commands:
@@ -84,33 +82,15 @@ modules:
   # The GTK version of the emulator
   - name: fuse
     config-opts:
-      - --bindir=/app/libexec
       - --with-x
       - --with-audio-driver=sdl
       - --enable-desktop-integration
     rm-configure: true
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.0/fuse-1.9.0.tar.gz
-        sha256: 34618c419e215e16ae4584f227e899e4e55be1ddb90fb03380c910ac16cab38a
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.1/fuse-1.9.1.tar.gz
+        sha256: 5815b42256d4dd28581d59f3ceec33fcd736b7a68afe032b1e65ba714fb55642
       - type: script
         dest-filename: autogen.sh
         commands:
           - autoreconf -f -i -I m4
-      # Move config file to the new location.
-      # This wrapper will disappear in the next release.
-      - type: script
-        dest-filename: fuse
-        commands:
-          - |-
-            binary="$(basename "$0")"
-            old_cfg="$XDG_CONFIG_HOME/fuserc"
-            new_cfg="$XDG_CONFIG_HOME/fuse-emulator/fuserc"
-            if [ ! -f "$new_cfg" ] && [ -f "$old_cfg" ]; then
-               install -m644 -D "$old_cfg" "$new_cfg"
-               rm -f "$old_cfg"
-            fi
-            exec "/app/libexec/$binary" "$@"
-      - type: shell
-        commands:
-          - install -m755 -D fuse /app/bin/fuse
