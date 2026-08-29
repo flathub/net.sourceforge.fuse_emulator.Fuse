@@ -48,14 +48,14 @@ modules:
   - name: libspectrum
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.6.3/libspectrum-1.6.3.tar.gz
-        sha256: fa4a5e68c1ab5860dcdf99f5486ee6313995dbe30e84160e9f699d0f8db77d76
+        url: https://download.sourceforge.net/project/fuse-emulator/libspectrum/1.6.4/libspectrum-1.6.4.tar.gz
+        sha256: 4cce5764227f040238877d9e0ce3aede2bac1b1adfa8ed535d68bb405df395c3
   # Misc utilities (not needed if you simply want to run Fuse)
   - name: fuse-utils
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse-utils/1.4.6/fuse-utils-1.4.6.tar.gz
-        sha256: 11612ac34b7e8aca6bdde43dd4d56737a178e2f4e171ec30144ca2f0976d937c
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse-utils/1.4.7/fuse-utils-1.4.7.tar.gz
+        sha256: 1a2e7be6447476d45c606c44536805cdb0dfb29d7f41632602d9a6883bf1e4b6
   # The SDL version of the emulator
   - name: fuse-sdl
     config-opts:
@@ -73,8 +73,8 @@ modules:
          /app/share/applications/net.sourceforge.fuse_emulator.Fuse.SDL.desktop
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.1/fuse-1.9.1.tar.gz
-        sha256: 5815b42256d4dd28581d59f3ceec33fcd736b7a68afe032b1e65ba714fb55642
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.2/fuse-1.9.2.tar.gz
+        sha256: ad04be2c67172c5387fd2cd84350ed8215958fa5b8a52a4990862867f089f489
       - type: script
         dest-filename: autogen.sh
         commands:
@@ -88,8 +88,8 @@ modules:
     rm-configure: true
     sources:
       - type: archive
-        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.1/fuse-1.9.1.tar.gz
-        sha256: 5815b42256d4dd28581d59f3ceec33fcd736b7a68afe032b1e65ba714fb55642
+        url: https://download.sourceforge.net/project/fuse-emulator/fuse/1.9.2/fuse-1.9.2.tar.gz
+        sha256: ad04be2c67172c5387fd2cd84350ed8215958fa5b8a52a4990862867f089f489
       - type: script
         dest-filename: autogen.sh
         commands:
